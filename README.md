@@ -1,5 +1,5 @@
 ## Vue.js Todo List example
 
-### Setup
+### Setup 
 npm install
 npm run dev
