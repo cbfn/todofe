@@ -1,67 +1,59 @@
 <template>
   <div class="todo">
     <h1>Task list with Vue.js! ;-)</h1>
-    <input type="text" v-model="todo.title" class="form-control" placeholder="Remember me to..." style="width: 258px">
-    <select v-model="todo.order" class="form-control" style="width: 100px">
-      <option value="" selected>Priority</option>
+    <input type="text" v-model="todo.attributes.title" class="form-control" placeholder="Remember me to..." style="width: 258px">
+    <select v-model="todo.attributes.order" class="form-control" style="width: 100px">
+      <option value="0" selected>Priority</option>
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
     </select>
     <button v-on:click="addTodo" class="form-control">Submit</button>
     <ul class="list-group" v-if="todos.length > 0">
-      <li v-for="todo in todos" track-by="$index" class="list-group-item">
-        {{ todo.title }}
-        <span class="list-group-actions">
-          <!-- <a href="javascript:void(0);" v-on:click="editTodo(todo.id)">edit</a> -->
-          <a href="javascript:void(0);" v-on:click="removeTodo(todo)" title="Remove {{todo.id}}">remove</a>
-        </span>
+      <li v-for="todo in todos | orderBy 'attributes.order'" track-by="$index" class="list-group-item">
+        <todo-item :todolist="todo"></todo-item>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import TodoItem from './TodoItem';
 export default {
   data() {
     return {
-      todo: { title: '', completed: '', order: '' },
+      todo: { attributes: { title: '', completed: '', order: 0 } },
       todos: [],
     };
+  },
+  components: {
+    TodoItem,
   },
   ready() {
     this.fetchTodos();
   },
   methods: {
     fetchTodos() {
-      this.$http.get('/api/v1/todos').then((response) => {
-        // success callback
-        this.$set('todos', response.data.todos);
-      }, (response) => {
-        // error callback
-        console.log(response);
+      this.$http.get('http://localhost:3000/api/v1/todos').then((response) => {
+        this.$set('todos', response.data.data);
+      }, (error) => {
+        console.log(error);
       });
     },
     addTodo() {
-      this.$http.post('/api/v1/todos', this.todo).then(() => {
-        // success callback
+      this.$http.post('http://localhost:3000/api/v1/todos', this.todo.attributes).then(() => {
         this.todos.push(this.todo);
-        this.todo = { title: '', completed: '', order: '' };
+        this.todo = { attributes: { title: '', completed: '', order: 0 } };
         this.fetchTodos();
-      }, (response) => {
-        // error callback
-        console.log(response);
+      }, (error) => {
+        console.log(error);
       });
     },
-    editTodo(index) {
-      console.log(index);
-      // Edit index
-    },
     removeTodo(todo) {
-      this.$http.delete(`/api/v1/todos/${todo.id}`).then(() => {
+      this.$http.delete(`http://localhost:3000/api/v1/todos/${todo.id}`).then(() => {
         this.todos.$remove(todo);
-      }, (response) => {
-        console.log(response);
+      }, (error) => {
+        console.log(error);
       });
     },
   },
