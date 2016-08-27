@@ -19,6 +19,8 @@
 
 <script>
 import TodoItem from './TodoItem';
+import { API_BASE_URL } from '../../config/index.js';
+
 export default {
   data() {
     return {
@@ -34,14 +36,14 @@ export default {
   },
   methods: {
     fetchTodos() {
-      this.$http.get('http://localhost:3000/api/v1/todos').then((response) => {
+      this.$http.get(`${API_BASE_URL}/api/v1/todos`).then((response) => {
         this.$set('todos', response.data.data);
       }, (error) => {
         console.log(error);
       });
     },
     addTodo() {
-      this.$http.post('http://localhost:3000/api/v1/todos', this.todo.attributes).then(() => {
+      this.$http.post(`${API_BASE_URL}/api/v1/todos`, this.todo.attributes).then(() => {
         this.todos.push(this.todo);
         this.todo = { attributes: { title: '', completed: '', order: 0 } };
         this.fetchTodos();
@@ -50,7 +52,7 @@ export default {
       });
     },
     removeTodo(todo) {
-      this.$http.delete(`http://localhost:3000/api/v1/todos/${todo.id}`).then(() => {
+      this.$http.delete(`${API_BASE_URL}/api/v1/todos/${todo.id}`).then(() => {
         this.todos.$remove(todo);
       }, (error) => {
         console.log(error);
