@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { API_BASE_URL } from '../../config/index.js';
+
 export default {
   props: ['todolist'],
   data() {
@@ -32,7 +34,7 @@ export default {
         title: this.newTitle,
         order: todo.order,
       };
-      this.$http.put(`http://localhost:3000/api/v1/todos/${todo.id}`, newTodo).then(() => {
+      this.$http.put(`${API_BASE_URL}/api/v1/todos/${todo.id}`, newTodo).then(() => {
         this.$set('isEditing', false);
         this.$parent.fetchTodos();
       }, (error) => {
