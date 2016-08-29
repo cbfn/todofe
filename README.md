@@ -13,6 +13,7 @@ Visit http://localhost:8080
 ### Options
 
 `npm run build` -> Build in dist folder for production
+
 `npm run deploy` -> Copy dist files to /public folder in our backend example
 
 > The todobe and todofe must be side by side to work correctly.
