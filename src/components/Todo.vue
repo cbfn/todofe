@@ -14,22 +14,43 @@
         <todo-item :todolist="todo"></todo-item>
       </li>
     </ul>
+    <v-paginator :options="options" :resource.sync="todos" :resource_url="resource_url"></v-paginator>
   </div>
 </template>
 
 <script>
 import TodoItem from './TodoItem';
 import { API_BASE_URL } from '../../config/index.js';
+import VPaginator from 'vuejs-paginator';
+
+// "meta": {
+//     "current-page": 1,
+//     "next-page": 2,
+//     "prev-page": null,
+//     "total-pages": 5,
+//     "total-count": 14
+//   }
 
 export default {
   data() {
     return {
       todo: { attributes: { title: '', completed: '', order: 0 } },
       todos: [],
+      resource_url: `${API_BASE_URL}/api/v1/todos`,
+      options: {
+        remote_data: 'data',
+        remote_current_page: 'meta.current-page',
+        remote_last_page: 'meta.total-pages',
+        remote_next_page_url: 'links.next',
+        remote_prev_page_url: 'links.prev',
+        next_button_text: 'next',
+        previous_button_text: 'prev',
+      },
     };
   },
   components: {
     TodoItem,
+    VPaginator,
   },
   ready() {
     this.fetchTodos();
@@ -54,6 +75,7 @@ export default {
     removeTodo(todo) {
       this.$http.delete(`${API_BASE_URL}/api/v1/todos/${todo.id}`).then(() => {
         this.todos.$remove(todo);
+        this.fetchTodos();
       }, (error) => {
         console.log(error);
       });
@@ -108,4 +130,39 @@ h1 {
     }
   }
 }
+.btn-default:hover {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+.btn.focus, .btn:focus, .btn:hover {
+    color: #333;
+    text-decoration: none;
+}
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border-radius: 4px;
+}
+
 </style>
