@@ -14,22 +14,12 @@
         <todo-item :todolist="todo"></todo-item>
       </li>
     </ul>
-    <v-paginator :options="options" :resource.sync="todos" :resource_url="resource_url"></v-paginator>
   </div>
 </template>
 
 <script>
 import TodoItem from './TodoItem';
 import { API_BASE_URL } from '../../config/index.js';
-import VPaginator from 'vuejs-paginator';
-
-// "meta": {
-//     "current-page": 1,
-//     "next-page": 2,
-//     "prev-page": null,
-//     "total-pages": 5,
-//     "total-count": 14
-//   }
 
 export default {
   data() {
@@ -50,7 +40,6 @@ export default {
   },
   components: {
     TodoItem,
-    VPaginator,
   },
   ready() {
     this.fetchTodos();
@@ -73,12 +62,55 @@ export default {
       });
     },
     removeTodo(todo) {
-      this.$http.delete(`${API_BASE_URL}/api/v1/todos/${todo.id}`).then(() => {
-        this.todos.$remove(todo);
-        this.fetchTodos();
-      }, (error) => {
-        console.log(error);
+      const self = this;
+      this.$swal({
+        title: 'Are you sure?',
+        text: `Do you really want delete "${todo.attributes.title}"`,
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, keep it',
+      }).then(() => {
+        self.$http.delete(`${API_BASE_URL}/api/v1/todos/${todo.id}`).then(() => {
+          self.todos.$remove(todo);
+          self.$swal(
+            'Deleted!',
+            'Your task has been deleted.',
+            'success'
+          );
+          self.fetchTodos();
+        }, (error) => {
+          console.log(error);
+        });
+      }, (dismiss) => {
+        // dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
+        if (dismiss === 'cancel') {
+          self.$swal(
+            'Cancelled',
+            'Your task is safe :)',
+            'error'
+          );
+        }
       });
+      // this.$swal({
+      //   title: 'Are you sure?',
+      //   text: `Do you really want delete "${todo.title}"`,
+      //   type: 'warning',
+      //   showCancelButton: true,
+      //   confirmButtonColor: '#DD6B55',
+      //   cancelButtonText: 'Cancel',
+      //   confirmButtonText: 'Yes',
+      //   showLoaderOnConfirm: true,
+      //   closeOnConfirm: false,
+      // }, () => {
+      //   self.$http.delete(`${API_BASE_URL}/api/v1/todos/${todo.id}`).then(() => {
+      //     self.todos.$remove(todo);
+      //     self.$swal('Removed with success!');
+      //     self.fetchTodos();
+      //   }, (error) => {
+      //     console.log(error);
+      //   });
+      // });
     },
   },
 };
