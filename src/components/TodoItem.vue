@@ -7,7 +7,7 @@
     <a href="javascript:void(0);" v-on:click="updateTodo(todolist)" v-if="isEditing">save</a>
     <a href="javascript:void(0);" v-on:click="editTodo" v-else><i class="fa fa-pencil fa-lg"></i></a>
     <a href="javascript:void(0);" v-on:click="cancel" v-if="isEditing">cancel</a>
-    <a href="javascript:void(0);" v-on:click.prevent="this.$parent.removeTodo(todolist)" title="Remove {{todolist.attributes.title}}?" v-else><i class="fa fa-trash fa-lg"></i></a>
+    <a href="javascript:void(0);" v-on:click.prevent="this.$parent.removeTodo(todolist)" v-else><i class="fa fa-trash fa-lg"></i></a>
   </span>
 </template>
 
