@@ -59,6 +59,11 @@ export default {
         this.fetchTodos();
       }, (error) => {
         console.log(error);
+        this.$swal(
+          'Oops...',
+          `${error.data.title}`,
+          'error',
+        );
       });
     },
     removeTodo(todo) {
