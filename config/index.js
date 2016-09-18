@@ -1,8 +1,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
 var env = require('./prod.env')
-const IS_LOCAL = env.NODE_ENV !== 'production'
-
+const IS_LOCAL = process.env.NODE_ENV !== 'production'
 const API_BASE_URL = IS_LOCAL ? 'http://localhost:3000' : ''
 
 module.exports = {
