@@ -11,7 +11,7 @@
     <button v-on:click="addTodo" class="form-control">Submit</button>
     <ul class="list-group" v-if="todos.length > 0">
       <li v-for="todo in todos | orderBy 'attributes.order'" track-by="$index" class="list-group-item">
-        <todo-item :todolist="todo"></todo-item>
+        <todo-item :todolist="todo" :fetchtodos="fetchTodos"></todo-item>
       </li>
     </ul>
   </div>
@@ -97,25 +97,6 @@ export default {
           );
         }
       });
-      // this.$swal({
-      //   title: 'Are you sure?',
-      //   text: `Do you really want delete "${todo.title}"`,
-      //   type: 'warning',
-      //   showCancelButton: true,
-      //   confirmButtonColor: '#DD6B55',
-      //   cancelButtonText: 'Cancel',
-      //   confirmButtonText: 'Yes',
-      //   showLoaderOnConfirm: true,
-      //   closeOnConfirm: false,
-      // }, () => {
-      //   self.$http.delete(`${API_BASE_URL}/api/v1/todos/${todo.id}`).then(() => {
-      //     self.todos.$remove(todo);
-      //     self.$swal('Removed with success!');
-      //     self.fetchTodos();
-      //   }, (error) => {
-      //     console.log(error);
-      //   });
-      // });
     },
   },
 };

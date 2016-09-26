@@ -15,7 +15,7 @@
 import { API_BASE_URL } from '../../config/index.js';
 
 export default {
-  props: ['todolist'],
+  props: ['todolist', 'fetchtodos'],
   data() {
     return {
       isEditing: false,
@@ -23,6 +23,9 @@ export default {
     };
   },
   methods: {
+    reloadTodo() {
+      this.fetchtodos();
+    },
     editTodo() {
       this.$set('isEditing', true);
     },
@@ -36,7 +39,9 @@ export default {
       };
       this.$http.put(`${API_BASE_URL}/api/v1/todos/${todo.id}`, newTodo).then(() => {
         this.$set('isEditing', false);
-        this.$parent.fetchTodos();
+        this.reloadTodo();
+        // // this.$parent.fetchTodos();
+        // this.$emit('fetchTodos');
       }, (error) => {
         console.log(error);
       });
